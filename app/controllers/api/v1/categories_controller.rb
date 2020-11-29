@@ -4,36 +4,36 @@ module Api
       skip_before_action :verify_authenticity_token
       def index
         categories = Category.order('created_at DESC')
-        render json: {status: 'SUCCESS', message: 'Loaded categories', data: categories}, status: :ok
+        json_response 'Loaded categories', true, categories, :ok
       end
 
       def show
         category = Category.find(params[:id])
-        render json: {status: 'SUCCESS', message: 'Loaded categories', data: category}, status: :ok
+        json_response 'Loaded category', true, category, :ok
       end
 
       def create
         category = Category.new(category_params)
         puts category.inspect
         if category.save
-          render json: {status: 'SUCCESS', message: 'Saved categories', data: category}, status: :ok
+          json_response 'Saved categories', true, category, :ok
         else
-          render json: {status: 'ERROR', message: 'Could not save', data: category}, status: :unprocessable_entity
+          json_response 'Could not save', false, category, :unprocessable_entity
         end
       end
 
       def destroy
         category = Category.find(params[:id])
         category.destroy
-        render json: {status: 'SUCCESS', message: 'Deleted category', data: category}, status: :ok
+        json_response 'Deleted', true, category, :ok
       end
 
       def update
         category = Category.find(params[:id])
         if category.update_attributes(category_params)
-          render json: {status: 'SUCCESS', message: 'Updated category', data: category}, status: :ok
+          json_response 'Updated', true, category, :ok
         else
-          render json: {status: 'ERROR', message: 'Category not updated', data: category.errors}, status: :unprocessable_entity
+          json_response 'Category not updated', false, category.errors, :unprocessable_entity
         end
       end
 

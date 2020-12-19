@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         delete "log_out", to: "sessions#destroy"
       end
       resources :categories
+      resources :vehicles
     end
   end
 end

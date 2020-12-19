@@ -1,12 +1,12 @@
 class Api::V1::VehiclesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :load_user, only: :index
-  before_action :load_vehicle, only: [:show]
-  before_action :authenticate_with_token!, only: [:create]
+  before_action :load_user, only: [:index, :update, :destroy]
+  before_action :authenticate_with_token!, only: [:create, :index, :show, :destroy, :update]
+  before_action :load_vehicle, only: [:show, :destroy, :update]
   def index
-    @vehicles = @user.vehicles
-    json_response 'Vehicles loaded successfully', true, @vehicles, :ok
+    vehicles = Vehicle.where(user_id: current_user.id)
+    json_response 'Vehicles loaded successfully', true, vehicles, :ok
   end
 
   def show
@@ -24,11 +24,27 @@ class Api::V1::VehiclesController < ApplicationController
   end
 
   def update
-
+    if @vehicle
+      if @vehicle.update vehicle_params
+        json_response 'Vehicle updated successfully', true, @vehicle, :ok
+      else
+        json_response 'Vehicle update failed', false, {}, :unprocessable_entity
+      end
+    else
+      json_response 'Vehicle not found', false, {}, :not_found
+    end
   end
 
   def destroy
-
+    if @vehicle
+      if @vehicle.destroy
+        json_response 'Deleted vehicle successfully', true, {}, :ok
+      else
+        json_response 'Delete vehicle failed', false, {}, :unprocessable_entity
+      end
+    else
+      json_response 'Vehicle not found',false, {}, :not_found
+    end
   end
 
   private
@@ -42,9 +58,9 @@ class Api::V1::VehiclesController < ApplicationController
   end
 
   def load_vehicle
-    @vehicle = Vehicle.find_by('id': params[:id])
+    @vehicle = Vehicle.find_by('id': params[:id], 'user_id': current_user.id)
     unless @vehicle.present?
-      json_response 'Cannot find a review', false, {}, :not_found
+      json_response 'Cannot find a vehicle', false, {}, :not_found
     end
   end
 

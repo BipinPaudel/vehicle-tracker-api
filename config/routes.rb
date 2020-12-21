@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       end
       resources :categories
       resources :vehicles
+      resources :maintenances
+      get '/maintenances/vehicles/:vehicle_id', to: 'maintenances#list_by_vehicle'
     end
   end
 end

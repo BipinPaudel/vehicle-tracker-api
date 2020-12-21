@@ -4,6 +4,7 @@ class Api::V1::VehiclesController < ApplicationController
   before_action :load_user, only: [:index, :update, :destroy]
   before_action :authenticate_with_token!, only: [:create, :index, :show, :destroy, :update]
   before_action :load_vehicle, only: [:show, :destroy, :update]
+
   def index
     vehicles = Vehicle.where(user_id: current_user.id)
     json_response 'Vehicles loaded successfully', true, vehicles, :ok

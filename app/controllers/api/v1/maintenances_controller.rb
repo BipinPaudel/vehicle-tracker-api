@@ -41,7 +41,7 @@ module Api
             json_response 'Create maintenance failed', false, maintenance, :unprocessable_entity
           end
         else
-          json_response 'Vehicle not found', true, {}, :not_found
+          json_response 'Vehicle not found', false, {}, :not_found
         end
       end
 
@@ -53,7 +53,7 @@ module Api
             json_response 'Maintenance update failed', false, {}, :unprocessable_entity
           end
         else
-          json_response 'Maintenance not found', true, {}, :not_found
+          json_response 'Maintenance not found', false, {}, :not_found
         end
       end
 
@@ -65,7 +65,7 @@ module Api
             json_response 'Delete failed', false, {}, :unprocessable_entity
           end
         else
-          json_response 'Maintenance not found', true, {}, :not_found
+          json_response 'Maintenance not found', false, {}, :not_found
         end
       end
 

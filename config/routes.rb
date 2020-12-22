@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       resources :vehicles
       resources :maintenances
       get '/maintenances/vehicles/:vehicle_id', to: 'maintenances#list_by_vehicle'
+      get '/notifications/user_notifications', to: 'notifications#user_notifications'
+      resources :notifications
     end
   end
 end

@@ -2,8 +2,8 @@ module Api
   module V1
     class NotificationsController < ApplicationController
       skip_before_action :verify_authenticity_token
-      before_action :authenticate_with_token!, only: [:create, :index, :show, :destroy, :update, :user_notifications]
-      before_action :load_notification, only: [:destroy, :update, :show]
+      before_action :authorize_request, only: [:create, :index, :show, :destroy, :update, :user_notifications]
+      before_action :load_notification, only: [:destroy, :update]
 
       def index
 
@@ -15,7 +15,13 @@ module Api
       end
 
       def show
-
+        if user_vehicle?
+          notification = Notification.find_by(vehicle_id: params[:vehicle_id])
+          if notification
+            json_response 'Notification loaded successfully', true, notification, :ok
+          end
+          json_response 'Notification not found', false, {}, :not_found
+        end
       end
 
       def destroy

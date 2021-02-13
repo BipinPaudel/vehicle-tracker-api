@@ -1,12 +1,13 @@
 class Api::V1::VehiclesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
+  before_action :authorize_request, only: [:create, :index, :show, :destroy, :update]
   before_action :load_user, only: [:index, :update, :destroy]
-  before_action :authenticate_with_token!, only: [:create, :index, :show, :destroy, :update]
   before_action :load_vehicle, only: [:show, :destroy, :update]
 
   def index
-    vehicles = Vehicle.where(user_id: current_user.id)
+    vehicles = @current_user.vehicles.joins(:category)
+                .select("vehicles.*, categories.id as category_id, categories.title as category_title")
     json_response 'Vehicles loaded successfully', true, vehicles, :ok
   end
 
@@ -16,7 +17,7 @@ class Api::V1::VehiclesController < ApplicationController
 
   def create
     vehicle = Vehicle.new vehicle_params
-    vehicle.user_id = current_user.id
+    vehicle.user_id = @current_user.id
     if vehicle.save
       json_response 'Created vehicle successfully', true, vehicle, :ok
     else
@@ -59,13 +60,13 @@ class Api::V1::VehiclesController < ApplicationController
   end
 
   def load_vehicle
-    @vehicle = Vehicle.find_by('id': params[:id], 'user_id': current_user.id)
+    @vehicle = Vehicle.find_by('id': params[:id], 'user_id': @current_user.id)
     unless @vehicle.present?
       json_response 'Cannot find a vehicle', false, {}, :not_found
     end
   end
 
   def vehicle_params
-    params.permit(:description, :price, :make_year, :buy_date, :category_id)
+    params.permit(:title, :description, :price, :make_year, :buy_date, :category_id, :images => [])
   end
 end

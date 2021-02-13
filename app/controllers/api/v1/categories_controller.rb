@@ -2,6 +2,7 @@ module Api
   module V1
     class CategoriesController < ApplicationController
       skip_before_action :verify_authenticity_token
+      before_action :authorize_request, except: [:index, :show]
       def index
         categories = Category.order('created_at DESC')
         json_response 'Loaded categories', true, categories, :ok

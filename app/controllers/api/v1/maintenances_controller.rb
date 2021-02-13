@@ -2,7 +2,7 @@ module Api
   module V1
     class MaintenancesController < ApplicationController
       skip_before_action :verify_authenticity_token
-      before_action :authenticate_with_token!, only: [:create, :index, :show, :destroy, :update]
+      before_action :authorize_request, only: [:create, :index, :show, :destroy, :update, :list_by_vehicle]
       before_action :load_maintenance, only: [:destroy, :update, :show]
 
 

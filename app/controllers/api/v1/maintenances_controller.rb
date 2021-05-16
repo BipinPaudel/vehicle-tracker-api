@@ -75,9 +75,7 @@ module Api
 
       def load_maintenance
         @maintenance = Maintenance.find_by('id': params[:id])
-        unless @maintenance.present?
-          json_response 'Cannot find maintenance', false, {}, :not_found
-        end
+        json_response 'Cannot find maintenance', false, {}, :not_found unless @maintenance.present?
       end
 
       def maintenance_params

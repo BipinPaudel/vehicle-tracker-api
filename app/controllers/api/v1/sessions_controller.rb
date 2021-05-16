@@ -4,8 +4,7 @@ module Api
   module V1
     class SessionsController < ApplicationController
       skip_before_action :verify_authenticity_token
-      before_action :sign_in_params, only: :create
-      before_action :load_user, only: :create
+      before_action :sign_in_params, :load_user, only: :create
       before_action :valid_token, only: :destroy
 
       # sign in

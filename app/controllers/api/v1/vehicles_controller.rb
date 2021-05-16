@@ -55,19 +55,13 @@ module Api
 
       private
 
-      def load_category
+      def load_category; end
 
-      end
-
-      def load_user
-
-      end
+      def load_user; end
 
       def load_vehicle
         @vehicle = Vehicle.find_by('id': params[:id], 'user_id': @current_user.id)
-        unless @vehicle.present?
-          json_response 'Cannot find a vehicle', false, {}, :not_found
-        end
+        json_response 'Cannot find a vehicle', false, {}, :not_found unless @vehicle.present?
       end
 
       def vehicle_params

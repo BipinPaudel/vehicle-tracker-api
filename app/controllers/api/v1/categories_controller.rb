@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class CategoriesController < ApplicationController
@@ -19,7 +21,7 @@ module Api
         if category.save
           json_response 'Saved categories', true, category, :ok
         else
-          json_response 'Could not save', false, category, :unprocessable_entity
+          json_response_errors 'Could not save', :unprocessable_entity
         end
       end
 
@@ -34,7 +36,7 @@ module Api
         if category.update_attributes(category_params)
           json_response 'Updated', true, category, :ok
         else
-          json_response 'Category not updated', false, category.errors, :unprocessable_entity
+          json_response_errors 'Category not updated', :unprocessable_entity
         end
       end
 

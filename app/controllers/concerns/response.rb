@@ -6,4 +6,21 @@ module Response
       data: data
     }, status: status
   end
+
+  def json_response_errors(errors, status)
+    render json: {
+      errors: map_errors(errors),
+      is_success: false
+    }, status: status
+  end
+
+  private
+
+  def map_errors(errors)
+    return [] if errors.blank?
+
+    return [errors] if errors.is_a?(String)
+
+    errors
+  end
 end

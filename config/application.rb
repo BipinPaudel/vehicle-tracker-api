@@ -32,5 +32,6 @@ module VehicleTracker
     # Don't generate system test files.
     config.generators.system_tests = nil
     config.secret_key_base = ENV['SECRET_KEY_BASE']
+    config.eager_load_paths << Rails.root.join('app', 'lib')
   end
 end

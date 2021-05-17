@@ -25,7 +25,7 @@ module Api
         if vehicle.save
           json_response 'Created vehicle successfully', true, vehicle, :ok
         else
-          json_response 'Create vehicle failed', false, vehicle, :unprocessable_entity
+          json_response_errors 'Create vehicle failed', :unprocessable_entity
         end
       end
 
@@ -34,10 +34,10 @@ module Api
           if @vehicle.update vehicle_params
             json_response 'Vehicle updated successfully', true, @vehicle, :ok
           else
-            json_response 'Vehicle update failed', false, {}, :unprocessable_entity
+            json_response_errors 'Vehicle update failed', :unprocessable_entity
           end
         else
-          json_response 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -46,10 +46,10 @@ module Api
           if @vehicle.destroy
             json_response 'Deleted vehicle successfully', true, {}, :ok
           else
-            json_response 'Delete vehicle failed', false, {}, :unprocessable_entity
+            json_response_errors 'Delete vehicle failed', :unprocessable_entity
           end
         else
-          json_response 'Vehicle not found',false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -61,7 +61,7 @@ module Api
 
       def load_vehicle
         @vehicle = Vehicle.find_by('id': params[:id], 'user_id': @current_user.id)
-        json_response 'Cannot find a vehicle', false, {}, :not_found unless @vehicle.present?
+        json_response_errors 'Cannot find a vehicle', :not_found unless @vehicle.present?
       end
 
       def vehicle_params

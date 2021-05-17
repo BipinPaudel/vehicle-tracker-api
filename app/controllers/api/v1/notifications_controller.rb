@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class NotificationsController < ApplicationController
@@ -19,10 +21,10 @@ module Api
           if notification
             json_response 'Notification loaded successfully', true, notification, :ok
           else
-            json_response 'Notification not found', false, {}, :not_found
+            json_response_errors 'Notification not found', :not_found
           end
         else
-          json_response 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -31,10 +33,10 @@ module Api
           if @notification.destroy
             json_response 'Notification deleted successfully', true, {}, :ok
           else
-            json_response 'Notification delete failed', false, {}, :unprocessable_entity
+            json_response_errors 'Notification delete failed', :unprocessable_entity
           end
         else
-          json_response 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -43,10 +45,10 @@ module Api
           if @notification.update notification_params
             json_response 'Notification updated successfully', true, @notification, :ok
           else
-            json_response 'Notification update failed', false, {}, :unprocessable_entity
+            json_response_errors 'Notification update failed', :unprocessable_entity
           end
         else
-          json_response 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -59,11 +61,11 @@ module Api
             if notification.save
               json_response 'Created notification successfully', true, notification, :ok
             else
-              json_response 'Create notification failed', false, notification, :unprocessable_entity
+              json_response_errors 'Create notification failed', :unprocessable_entity
             end
           end
         else
-          json_response 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 

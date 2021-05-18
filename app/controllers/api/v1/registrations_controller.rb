@@ -8,11 +8,11 @@ module Api
 
       # sign up
       def create
-        user = User.new user_params
-        if user.save
+        user = User.create user_params
+        if user.valid?
           json_response 'Signed Up successfully', true, registration_success_response(user), :ok
         else
-          json_response_errors 'Something wrong', :unprocessable_entity
+          json_response_errors user.errors, :unprocessable_entity
         end
       end
 

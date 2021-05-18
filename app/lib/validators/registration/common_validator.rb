@@ -8,11 +8,14 @@ module Validators
       attr_accessor :email, :password, :password_confirmation
 
       validates :email,
-                presence: { message: 'Email cannot be blank' }
+                presence: { message: 'Email cannot be blank' },
+                format: { with: URI::MailTo::EMAIL_REGEXP, message: 'Email format is incorrect' }
+
       validates :password,
-                presence: { message: 'Password cannot be blank' }
-      validates :password,
-                confirmation: { case_sensitive: true, message: 'Password confirmation cannot be different' }
+                presence: { message: 'Password cannot be blank' },
+                length: { minimum: 6, message: 'Password must be 6 characters or more' },
+                confirmation: { case_sensitive: true,
+                                message: 'Password confirmation cannot be different' }
 
       def initialize(params = {})
         @email = params[:email]

@@ -21,6 +21,8 @@ module Response
 
     return [errors] if errors.is_a?(String)
 
+    return errors.messages.map { |k, v| v }.flatten if errors.is_a?(ActiveModel::Errors)
+
     errors
   end
 end

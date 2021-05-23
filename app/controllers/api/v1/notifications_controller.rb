@@ -45,7 +45,7 @@ module Api
           if @notification.update notification_params
             json_response 'Notification updated successfully', true, @notification, :ok
           else
-            json_response_errors 'Notification update failed', :unprocessable_entity
+            json_response_errors @notification.errors, :unprocessable_entity
           end
         else
           json_response_errors 'Vehicle not found', :not_found
@@ -57,11 +57,11 @@ module Api
           if @notification.present?
             json_response 'Only one notification for a vehicle', false, { }, :unprocessable_entity
           else
-            notification = Notification.new notification_params
-            if notification.save
+            notification = Notification.create notification_params
+            if notification.valid?
               json_response 'Created notification successfully', true, notification, :ok
             else
-              json_response_errors 'Create notification failed', :unprocessable_entity
+              json_response_errors notification.errors, :unprocessable_entity
             end
           end
         else

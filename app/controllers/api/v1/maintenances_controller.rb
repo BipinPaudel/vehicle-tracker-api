@@ -13,7 +13,7 @@ module Api
           maintenances = Maintenance.where(vehicle_id: params[:vehicle_id])
           json_response 'Maintenances loaded successfully', true, maintenances, :ok
         else
-          json_response_errors 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -22,7 +22,7 @@ module Api
           maintenances = Maintenance.where(vehicle_id: params[:vehicle_id])
           json_response 'Maintenances loaded successfully', true, maintenances, :ok
         else
-          json_response_errors 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -30,20 +30,20 @@ module Api
         if user_vehicle?(@maintenance.vehicle_id)
           json_response 'Show maintenance successfully', true, @maintenance, :ok
         else
-          json_response_errors 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
       def create
         if user_vehicle?
-          maintenance = Maintenance.new maintenance_params
-          if maintenance.save
+          maintenance = Maintenance.create maintenance_params
+          if maintenance.valid?
             json_response 'Create maintenance successfully', true, maintenance, :ok
           else
-            json_response_errors 'Create maintenance failed', false, maintenance, :unprocessable_entity
+            json_response_errors maintenance.errors, :unprocessable_entity
           end
         else
-          json_response_errors 'Vehicle not found', false, {}, :not_found
+          json_response_errors 'Vehicle not found', :not_found
         end
       end
 
@@ -52,10 +52,10 @@ module Api
           if @maintenance.update maintenance_params
             json_response 'Maintenance updated successfully', true, @maintenance, :ok
           else
-            json_response_errors 'Maintenance update failed', false, {}, :unprocessable_entity
+            json_response_errors @maintenance.errors, :unprocessable_entity
           end
         else
-          json_response_errors 'Maintenance not found', false, {}, :not_found
+          json_response_errors 'Maintenance not found', :not_found
         end
       end
 
@@ -64,10 +64,10 @@ module Api
           if @maintenance.destroy
             json_response 'Deleted maintenance successfully', true, {}, :ok
           else
-            json_response_errors 'Delete failed', false, {}, :unprocessable_entity
+            json_response_errors 'Delete failed', :unprocessable_entity
           end
         else
-          json_response_errors 'Maintenance not found', false, {}, :not_found
+          json_response_errors 'Maintenance not found', :not_found
         end
       end
 
@@ -75,7 +75,7 @@ module Api
 
       def load_maintenance
         @maintenance = Maintenance.find_by('id': params[:id])
-        json_response_errors 'Cannot find maintenance', false, {}, :not_found unless @maintenance.present?
+        json_response_errors 'Cannot find maintenance',:not_found unless @maintenance.present?
       end
 
       def maintenance_params

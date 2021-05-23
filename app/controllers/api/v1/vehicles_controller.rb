@@ -20,12 +20,12 @@ module Api
       end
 
       def create
-        vehicle = Vehicle.new vehicle_params
-        vehicle.user_id = @current_user.id
-        if vehicle.save
+        vehicle = vehicle_params.merge(user_id: @current_user.id)
+        vehicle = Vehicle.create vehicle
+        if vehicle.valid?
           json_response 'Created vehicle successfully', true, vehicle, :ok
         else
-          json_response_errors 'Create vehicle failed', :unprocessable_entity
+          json_response_errors vehicle.errors, :unprocessable_entity
         end
       end
 
@@ -34,7 +34,7 @@ module Api
           if @vehicle.update vehicle_params
             json_response 'Vehicle updated successfully', true, @vehicle, :ok
           else
-            json_response_errors 'Vehicle update failed', :unprocessable_entity
+            json_response_errors @vehicle.errors, :unprocessable_entity
           end
         else
           json_response_errors 'Vehicle not found', :not_found

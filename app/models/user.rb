@@ -9,8 +9,7 @@ class User < ApplicationRecord
   #        :recoverable, :rememberable, :validatable
 
   validates :email, presence: true, uniqueness: { message: 'Email already exists' }
-  validates :password,
-            if: -> { new_record? || !password.nil? }
+  validate :password, if: -> { new_record? || !password.nil? }
 
   def generate_new_authentication_token
     token = User.generate_unique_secure_token

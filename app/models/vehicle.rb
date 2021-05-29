@@ -22,4 +22,8 @@ class Vehicle < ApplicationRecord
     errors.add(:buy_date, 'Buy date cannot be in the future') if buy_date > Date.today
     errors.add(:make_year, 'Make year cannot be in the future') if make_year.to_i > Date.today.year
   end
+
+  def self.send_email_for_maintenance
+    puts 'hey there'
+  end
 end

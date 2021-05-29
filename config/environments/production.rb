@@ -95,6 +95,7 @@ Rails.application.configure do
     port: 587,
     user_name: ENV['BIPIN_EMAIL'],
     password: ENV['BIPIN_FIVERR_PASSWORD'],
+    domain: 'bp-vehicle-tracker.herokuapp.com',
     authentication: 'plain',
     enable_starttls_auto: true
   }

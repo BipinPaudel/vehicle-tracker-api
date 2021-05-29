@@ -23,7 +23,16 @@ class Vehicle < ApplicationRecord
     errors.add(:make_year, 'Make year cannot be in the future') if make_year.to_i > Date.today.year
   end
 
-  def self.send_email_for_maintenance
-    puts 'hey there'
+  def self.records_to_send
+    sql = "select distinct on (m.vehicle_id) *, extract ( day from now() - m.date) from vehicles v
+    inner join notifications n
+        on v.id = n.vehicle_id
+    left join maintenances m
+        on v.id = m.vehicle_id
+    inner join users u
+        on v.user_id = u.id
+    where ((extract ( day from now() - m.date)) > n.day or (v.km_driven - m.km) > n.km)
+    order by m.vehicle_id ,m.date desc"
+    ActiveRecord::Base.connection.execute(sql)
   end
 end

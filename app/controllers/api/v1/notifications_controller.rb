@@ -15,6 +15,10 @@ module Api
         json_response 'Notification list', true, notifications, :ok
       end
 
+      def send_notification
+        Alerts::SendAlert.send_alerts
+      end
+
       def show
         if user_vehicle?
           notification = Notification.where(vehicle_id: params[:vehicle_id])
